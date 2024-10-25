@@ -25,10 +25,10 @@ module tt_um_hybrid_adder (
   assign b = uio_in;
 
   HA8 adder(
-    .sum sum,
-    .cout cout,
-    .a a,
-    .b b
+    .sum(sum),
+    .cout(cout),
+    .a(a),
+    .b(b)
   );
 
   assign uio_oe = 0;
