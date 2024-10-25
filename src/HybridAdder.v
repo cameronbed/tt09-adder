@@ -68,49 +68,50 @@ endmodule
 module KSA4(output [3:0] sum, output cout, input [3:0] a, input [3:0] b, input cin);
   wire [3:0] c;
   wire [3:0] g, p;
-  wire [3:1] g2, p2;
-  wire g3, p3;
+  wire [3:0] g0, p0; // Initial generate and propagate
+  wire [3:0] g1, p1; // First stage
+  wire [3:0] g2, p2; // Second stage
   genvar i;
 
-  // Square instances
+  // Generate initial g and p
   generate
-    for (i = 0; i < 4; i = i + 1) begin : square_inst
-      Square sq(g[i], p[i], a[i], b[i]);
+    for (i = 0; i < 4; i = i + 1) begin : gp_gen
+      assign g0[i] = a[i] & b[i];
+      assign p0[i] = a[i] ^ b[i];
     end
   endgenerate
 
-  // First line of circles
-  SmallCircle sc0_0(c[0], g[0]);
+  // Include cin in the first carry
+  assign c[0] = g0[0] | (p0[0] & cin);
 
+  // First stage of computation
   generate
-    for (i = 1; i <= 3; i = i + 1) begin : bc0_inst
-      BigCircle bc0(g2[i], p2[i], g[i], p[i], g[i-1], p[i-1]);
+    for (i = 1; i < 4; i = i + 1) begin : stage1
+      assign g1[i] = g0[i] | (p0[i] & g0[i-1]);
+      assign p1[i] = p0[i] & p0[i-1];
     end
   endgenerate
 
-  // Second line of circles
+  // Second stage of computation
+  assign g2[2] = g1[2] | (p1[2] & g1[0]);
+  assign p2[2] = p1[2] & p1[0];
+  assign g2[3] = g1[3] | (p1[3] & g1[1]);
+  assign p2[3] = p1[3] & p1[1];
+
+  // Compute carries
+  assign c[1] = g1[1] | (p1[1] & c[0]);
+  assign c[2] = g2[2] | (p2[2] & c[0]);
+  assign c[3] = g2[3] | (p2[3] & c[0]);
+
+  // Sum calculation
+  assign sum[0] = p0[0] ^ cin;
   generate
-    for (i = 1; i <= 2; i = i + 1) begin : sc1_inst
-      SmallCircle sc1(c[i], g2[i]);
+    for (i = 1; i < 4; i = i + 1) begin : sum_gen
+      assign sum[i] = p0[i] ^ c[i-1];
     end
   endgenerate
 
-  BigCircle bc1(g3, p3, g2[3], p2[3], g2[1], p2[1]);
-
-  // Fourth line of circle
-  SmallCircle sc3_3(c[3], g3);
-
-  // Last line - triangles
-  Triangle tr0(sum[0], p[0], cin);
-
-  generate
-    for (i = 1; i <= 3; i = i + 1) begin : tr_inst
-      Triangle tr(sum[i], p[i], c[i-1]);
-    end
-  endgenerate
-
-  // Generate cout
-  buf #(1) (cout, c[3]);
+  assign cout = c[3];
 endmodule
 
 module PGGen(output g, output p, input a, input b);
