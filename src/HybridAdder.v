@@ -67,7 +67,6 @@ endmodule
 
 module KSA4(output [3:0] sum, output cout, input [3:0] a, input [3:0] b, input cin);
   wire [3:0] c;
-  wire [3:0] g, p;
   wire [3:0] g0, p0; // Initial generate and propagate
   wire [3:0] g1, p1; // First stage
   wire [3:0] g2, p2; // Second stage
@@ -84,6 +83,10 @@ module KSA4(output [3:0] sum, output cout, input [3:0] a, input [3:0] b, input c
   // Include cin in the first carry
   assign c[0] = g0[0] | (p0[0] & cin);
 
+  // Initialize g1[0] and p1[0]
+  assign g1[0] = g0[0];
+  assign p1[0] = p0[0];
+
   // First stage of computation
   generate
     for (i = 1; i < 4; i = i + 1) begin : stage1
@@ -93,13 +96,20 @@ module KSA4(output [3:0] sum, output cout, input [3:0] a, input [3:0] b, input c
   endgenerate
 
   // Second stage of computation
+  assign g2[0] = g1[0];
+  assign p2[0] = p1[0];
+
+  assign g2[1] = g1[1];
+  assign p2[1] = p1[1];
+
   assign g2[2] = g1[2] | (p1[2] & g1[0]);
   assign p2[2] = p1[2] & p1[0];
+
   assign g2[3] = g1[3] | (p1[3] & g1[1]);
   assign p2[3] = p1[3] & p1[1];
 
   // Compute carries
-  assign c[1] = g1[1] | (p1[1] & c[0]);
+  assign c[1] = g2[1] | (p2[1] & c[0]);
   assign c[2] = g2[2] | (p2[2] & c[0]);
   assign c[3] = g2[3] | (p2[3] & c[0]);
 
@@ -113,6 +123,7 @@ module KSA4(output [3:0] sum, output cout, input [3:0] a, input [3:0] b, input c
 
   assign cout = c[3];
 endmodule
+
 
 module PGGen(output g, output p, input a, input b);
   and #(1) (g, a, b);
