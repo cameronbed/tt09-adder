@@ -42,7 +42,7 @@ async def test_project(dut):
             dut.ui_in.value = x
             dut.uio_in.value = y
             await ClockCycles(dut.clk, 10)
-            dut._log.info(f"value of operands are {dut.ui_in.value} and {dut.uio_in.value} outputs are: {dut.uo_out.value} .")
+            dut._log.info(f"Test: {dut.ui_in.value} + {dut.uio_in.value} = {dut.uo_out.value} .")
             c = c % 255
             assert dut.uo_out.value == c
 
