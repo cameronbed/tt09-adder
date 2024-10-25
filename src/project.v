@@ -4,6 +4,7 @@
  */
 
 `default_nettype none
+`include "HybridAdder.v"
 
 module tt_um_hybrid_adder (
     input  wire [7:0] ui_in,    // Dedicated inputs
@@ -25,10 +26,10 @@ module tt_um_hybrid_adder (
   assign b = uio_in;
 
   HA8 adder(
-    .sum sum,
-    .cout cout,
-    .a a,
-    .b b
+    .sum(sum),
+    .cout(cout),
+    .a(a),
+    .b(b)
   );
 
   assign uio_oe = 0;
