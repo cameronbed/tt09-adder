@@ -36,8 +36,8 @@ async def test_project(dut):
     # Change it to match the actual expected output of your module:
     # assert dut.uo_out.value == 50
 
-    for x in range(15):
-        for y in range(15):
+    for x in range(255):
+        for y in range(255):
             c = x + y
             dut.ui_in.value = x
             dut.uio_in.value = y
