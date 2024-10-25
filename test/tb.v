@@ -28,7 +28,7 @@ module tb ();
 `endif
 
   // Replace tt_um_example with your module name:
-  tt_hybrid_adder hybrid_adder (
+  tt_um_hybrid_adder hybrid_adder (
     // Include power ports for the Gate Level test:
     `ifdef GL_TEST
           .VPWR(VPWR),
