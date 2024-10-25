@@ -36,5 +36,16 @@ async def test_project(dut):
     # Change it to match the actual expected output of your module:
     assert dut.uo_out.value == 50
 
+    for x in range(15):
+        for y in range(15):
+            sum = x + y
+            dut.a.value = x
+            dut.b.value = y
+            await ClockCycles(dut.clk, 10)
+            dut._log.info(f"value of outputs are: {dut.sum.value} .")
+            sum = sum % 255
+            assert dut.sum.value == sum
+    return
+
     # Keep testing the module by changing the input values, waiting for
     # one or more clock cycles, and asserting the expected output values.
