@@ -5,7 +5,7 @@
 
 `default_nettype none
 
-module tt_um_example (
+module tt_hybrid_adder (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
@@ -18,11 +18,17 @@ module tt_um_example (
 
   // All output pins must be assigned. If not used, assign to 0.
   wire cout;
+  wire [7:0] sum, a, b;
+
+  assign sum = uo_out;
+  assign a = ui_in;
+  assign b = uio_in;
+
   HA8 adder(
-    .sum uo_out,
+    .sum sum,
     .cout cout,
-    .a ui_in,
-    .b uio_in
+    .a a,
+    .b b
   );
 
   uio_oe = 0;
