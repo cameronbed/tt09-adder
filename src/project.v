@@ -5,7 +5,7 @@
 
 `default_nettype none
 
-module tt_hybrid_adder (
+module tt_um_hybrid_adder (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
@@ -20,7 +20,7 @@ module tt_hybrid_adder (
   wire cout;
   wire [7:0] sum, a, b;
 
-  assign sum = uo_out;
+  assign uo_out = sum;
   assign a = ui_in;
   assign b = uio_in;
 
@@ -31,8 +31,8 @@ module tt_hybrid_adder (
     .b b
   );
 
-  uio_oe = 0;
-  uio_out = 0;
+  assign uio_oe = 0;
+  assign uio_out = 0;
 
   // List all unused inputs to prevent warnings
   wire _unused = &{ena, clk, rst_n, 1'b0};
