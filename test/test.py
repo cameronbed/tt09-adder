@@ -39,7 +39,7 @@ async def test_project(dut):
 
     for x in range(256):
         for y in range(256):
-            c = (x + y) % 0xFF
+            c = (x + y) % 0x100
             dut.ui_in.value = x
             dut.uio_in.value = y
             await ClockCycles(dut.clk, 10)
