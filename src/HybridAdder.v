@@ -93,6 +93,7 @@ endmodule
 
 module HA8(output [7:0] sum, output cout, input [7:0] a, b);
 
+  wire cout_1;
 	CLA4 cla4(sum[3:0], cout_1, a[3:0], b[3:0]);
 	KSA4 ksa4(sum[7:4], cout, a[7:4], b[7:4], cout_1);
 
