@@ -20,8 +20,9 @@ async def test_project(dut):
     dut.ui_in.value = 0
     dut.uio_in.value = 0
     dut.rst_n.value = 0
-    await ClockCycles(dut.clk, 10)
+    await ClockCycles(dut.clk, 20)
     dut.rst_n.value = 1
+    await ClockCycles(dut.clk, 10)
 
     dut._log.info("Test project behavior")
 
@@ -36,14 +37,13 @@ async def test_project(dut):
     # Change it to match the actual expected output of your module:
     # assert dut.uo_out.value == 50
 
-    for x in range(255):
-        for y in range(255):
-            c = x + y
+    for x in range(256):
+        for y in range(256):
+            c = (x + y) % 0xFF
             dut.ui_in.value = x
             dut.uio_in.value = y
             await ClockCycles(dut.clk, 10)
             dut._log.info(f"Test: {dut.ui_in.value} + {dut.uio_in.value} = {dut.uo_out.value} .")
-            c = c % 255
             assert dut.uo_out.value == c
 
     # Keep testing the module by changing the input values, waiting for
