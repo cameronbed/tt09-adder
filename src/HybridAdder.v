@@ -72,7 +72,7 @@ module CLA4(output [3:0] sum, output cout, input [3:0] a, b);
   wire cin;
 
   assign cin = 1'b0;
-  
+
   // Manually instantiate Squares
   Square sq0(g[0], p[0], a[0], b[0]);
   Square sq1(g[1], p[1], a[1], b[1]);
